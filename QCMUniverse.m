@@ -91,33 +91,6 @@ classdef QCMUniverse < handle
                     obj.buildings{i_building} = building;
                 end
             end
-
-            % The buildings can be created in various ways
-%             b = obj.prm.buildings;
-%             if strcmp(b.placement.type, 'grid')
-%                 matRoof = GenericMaterial(obj.prm.materials.roof.tag, obj.prm.materials.roof.shading);
-%                 matWall = GenericMaterial(obj.prm.materials.wall.tag, obj.prm.materials.wall.shading);
-%                 ii = 0;
-%                 for ny = -(b.placement.elements.y-1)/2:(b.placement.elements.y-1)/2
-%                     for nx = -(b.placement.elements.x-1)/2:(b.placement.elements.x-1)/2
-%                         ii = ii+1;
-%                         % A buildingstrutcure is defined by the relative position of its corner, its height, resolution and materials
-%                         b0 = 0;
-%                         h = b.size.height.mean + b.size.height.std*randn(1);
-%                         bx = 40/b.placement.elements.x;
-%                         by = 40/b.placement.elements.y;
-%                         corners = [bx/2*[-1 -1 1 1]' by/2*[-1 1 1 -1]']; 
-%                         pos = [obj.prm.ground.size.east_west/2 + nx*bx*2 obj.prm.ground.size.north_south/2 + ny*by*2 b0];
-%                         rot = 0;
-%                         building = BuildingStructure(corners, h, b.resolution, matWall, matRoof);
-%                         obj.universe.AddAtoms(sprintf('Building%d', ii), building, pos, rot)
-%                         % Saving to a cell array
-%                         obj.buildings{ii} = building;
-%                     end 
-%                 end
-%             elseif strcmp(b.placement.type, 'test')
-%                 a = 0
-%             end
         end
 
         function createTrees(obj)
