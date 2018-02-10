@@ -74,21 +74,32 @@ classdef QCMUniverse < handle
                 bg = bgs{ii};
                 func_handle = eval(['@layout_', bg.layout.class]);                
                 coords = func_handle(obj, bg.layout.preset);
-                heights = bg.size.height.mean + bg.size.height.std*randn(1, coords.n);
-                corners = [bg.size.x/2*[-1 -1 1 1]' bg.size.y/2*[-1 1 1 -1]'];
-                if isfield(bg, 'rotation')
-                    rots = bg.rotation.mean + bg.rotation.std*randn(1, coords.n);
+                if isfield(bg, 'translation')
+                    coords.x = coords.x + bg.translation.x;
+                    coords.y = coords.y + bg.translation.y;
+                end     
+                % Height can be a constant or a struct with mean and std
+                if class(bg.size.height) == 'struct'
+                    heights = bg.size.height.mean + bg.size.height.std*randn(1, coords.n);                    
                 else
-                    rots = zeros(1, coords.n);
+                    heights = bg.size.height*ones(1, coords.n);
                 end
+                % Corners
+                corners = [bg.size.x/2*[-1 -1 1 1]' bg.size.y/2*[-1 1 1 -1]'];
+                % Rotation
+                rots = zeros(1, coords.n);
+                if isfield(bg, 'rotation') & (class(bg.size.height) == 'struct')
+                    rots = bg.rotation.mean + bg.rotation.std*randn(1, coords.n);
+                end
+                % Iterating over the building list
                 for ib=1:coords.n
                     pos = [coords.x(ib) coords.y(ib) 0]; % Height above groud is always 0??
                     % Create the building
-                    building = BuildingStructure(corners, heights(i_building), bg.resolution, matWall, matRoof);
-                    obj.universe.AddAtoms(sprintf('Building%d', i_building), building, pos, rots(i_building))
+                    building = BuildingStructure(corners, heights(ib), bg.resolution, matWall, matRoof);
+                    obj.universe.AddAtoms(sprintf('Building%d', i_building), building, pos, rots(ib))
                     % Saving the building
-                    i_building = i_building + 1;
                     obj.buildings{i_building} = building;
+                    i_building = i_building + 1;
                 end
             end
         end
@@ -124,29 +135,46 @@ classdef QCMUniverse < handle
 
         % Layout functions
         function coords = layout_grid(obj, preset)
-            coords = struct('x', [], 'y', [], 'n', 0)
-            params = obj.presets.buildings.grid.(preset)
+            coords = struct('x', [], 'y', [], 'n', 0);
+            params = obj.presets.buildings.grid.(preset);
             if ~isfield(params.x, 'min') || ~isfield(params.x, 'max') || ~isfield(params.y, 'min')  || ~isfield(params.y, 'max')
-                params.x.min = 0
-                params.x.max = obj.prm.ground.size.east_west
-                params.y.min = 0
-                params.y.max = obj.prm.ground.size.north_south
+                params.x.min = 0;
+                params.x.max = obj.prm.ground.size.east_west;
+                params.y.min = 0;
+                params.y.max = obj.prm.ground.size.north_south;
             end
-            x = params.x.min:params.x.spacing:params.x.max
-            y = params.y.min:params.y.spacing:params.y.max
-            [X, Y] = meshgrid(x, y)
-            coords.x = reshape(X, [1, numel(X)])
-            coords.y = reshape(Y, [1, numel(Y)])
-            coords.n = numel(X)
+            if params.x.min == params.x.max
+                x = params.x.min;
+            else
+                x = params.x.min:params.x.spacing:params.x.max;
+            end
+            if params.y.min == params.y.max
+                y = params.y.min;
+            else
+                y = params.y.min:params.y.spacing:params.y.max;
+            end
+            [X, Y] = meshgrid(x, y);
+            coords.x = reshape(X, [1, numel(X)]);
+            coords.y = reshape(Y, [1, numel(Y)]);
+            coords.n = numel(X);
         end
 
         function coords = layout_circle(obj, preset)
-            coords = struct('x', [], 'y', [], 'n', 0)
-            params = obj.presets.buildings.circle.(preset)
-            r = 1:params.n
-            coords.x = params.radius*cos(r/params.n*2*pi)
-            coords.y = params.radius*sin(r/params.n*2*pi)
-            coords.n = params.n
+            coords = struct('x', [], 'y', [], 'n', 0);
+            params = obj.presets.buildings.circle.(preset);
+            r = 0:params.n-1;
+            if ~isfield(params, 'center')
+                params.center = struct();
+                params.center.x = obj.prm.ground.size.east_west/2;
+                params.center.y = obj.prm.ground.size.north_south/2;
+            end
+            if ~isfield(params, 'angle')
+                params.angle = 360;
+            end
+            params.angle = params.angle*pi/180;
+            coords.x = params.center.x + params.radius*cos(r/(params.n-1)*params.angle);
+            coords.y = params.center.y + params.radius*sin(r/(params.n-1)*params.angle);
+            coords.n = params.n;
         end
     end
 
