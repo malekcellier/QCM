@@ -1,0 +1,77 @@
+SimpleTest:
+  freqs:
+    central_ghz: 28
+    spacing_khz: 150
+    n_bins: 121
+  RX:
+    origin: {x: 0, y: 0, z: 0}
+    n_el: {x: 12, y: 1, z: 2}
+    spacing: {x: 0.7, y: 0, z: 0.7}
+    use_lambda: true
+    center: true
+    element: isotropic
+    polarization: 45
+    dualpolarization: true
+  TX:
+    origin: {x: 0, y: 0, z: 0}
+    n_el: {x: 12, y: 1, z: 2}
+    spacing: {x: 0.7, y: 0, z: 0.7}
+    use_lambda: true
+    center: true
+    element: isotropic
+    polarization: 45
+    dualpolarization: true
+  
+  universe:
+    materials:
+      ground: {tag: Street, shading: 0}
+      wall: {tag: CMU, shading: 1}
+      roof: {tag: Wood, shading: 1}
+      trunk: {tag: Wood, shading: 0}
+      foliage: {tag: Wood, shading: 1}
+    ground:
+      size:
+        east_west: 110
+        north-south: 110
+      resolution: 5
+    trees:
+      - {id: 1, position: [55, 55, 0], radius: 3, height: 13}
+      - {id: 2, position: [55, 10, 0], radius: 6, height: 13}
+      - {id: 3, position: [55, 100, 0], radius: 3, height: 13}
+      - {id: 4, position: [10, 55, 0], radius: 4, height: 14}
+      - {id: 5, position: [100, 55, 0], radius: 3, height: 11}
+    trees:
+      Tree1:
+        id: 1
+        position: [55, 55, 0]
+        shape:
+          radius: 3
+          height: 13
+    trees:
+      positions: {class: manual, preset: m_1}
+      shape: 'test'
+    buildings: # can be defined in many ways, from map
+      resolution: 5
+      preset: random # random height, not position
+      mode: grid
+      height:
+        mode: 
+          dist: randn
+          mean: 20
+          std: 20
+      position:
+        mode: grid
+        nx: 4
+        ny: 4
+      size: 1
+      environment: madrid
+
+SimpleTest_:
+  universe: simple_test
+  nodes: #or povs
+    enbs: 0
+    ues: 0
+  channel:
+    frequency_band: {center: 20000, spacing: 0.15, n: 110}
+    links:
+      - {source: enbs, sink: ues}
