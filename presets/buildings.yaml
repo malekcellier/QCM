@@ -1,16 +1,16 @@
 # List of building generation recipes (both placement and size?)
 
-
-procedural:
-  simple:
-    elements: {x: 4, y: 4}
-    spacing: {x: 10, y: 10}
-    center: true
-
 circle:
   c_1:
     center: {x: 0, y: 0}
-    radius: 500
+    radius: 250
+    n: 10
+  c_2:
+    radius: 150
+    n: 10
+  c_3:
+    radius: 125
+    angle: 180
     n: 10
 
 grid:
@@ -26,9 +26,15 @@ grid:
   l_1:
     x: {min: 100, max: 100, spacing: 0}
     y: {min: 100, max: 900, spacing: 100}
+  l_2:
+    x: {min: 100, max: 100, spacing: 0}
+    y: {min: 100, max: 900, spacing: 100}
   l_3:
     x: {min: 100, max: 100, spacing: 0}
     y: {min: 100, max: 900, spacing: 100}
+  l_4:
+    x: {min: 150, max: 150, spacing: 0}
+    y: {min: 30, max: 30, spacing: 0}
 
 manual: # place the centers of the buildings
   madrid:

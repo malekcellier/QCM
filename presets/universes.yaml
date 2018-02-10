@@ -1,34 +1,5 @@
 # list of universes
-
 simple_test:
-  materials:
-    ground: {tag: Street, shading: 0}
-    wall: {tag: CMU, shading: 1}
-    roof: {tag: Wood, shading: 1}
-    trunk: {tag: Wood, shading: 0}
-    foliage: {tag: Wood, shading: 1}    
-  ground:
-    resolution: 5   
-    size: {east_west: 110, north_south: 110}
-  buildings:
-    resolution: 5
-    placement:
-      type: grid      
-      elements: {x: 4, y: 4}
-      spacing: {x: 10, y: 10}
-      center: true # aka center_on_ground
-    size:
-      height: {mean: 20, std: 5} #randn
-      width: 10
-      depth: 10
-  trees:
-    - {id: 1, position: [55, 55, 0], radius: 3, height: 13}
-    - {id: 2, position: [55, 10, 0], radius: 6, height: 13}
-    - {id: 3, position: [55, 100, 0], radius: 3, height: 13}
-    - {id: 4, position: [10, 55, 0], radius: 4, height: 14}
-    - {id: 5, position: [100, 55, 0], radius: 3, height: 11}
-
-simple_test_1:
   materials:
     ground: {tag: Street, shading: 0}
     wall: {tag: CMU, shading: 1}
@@ -40,7 +11,7 @@ simple_test_1:
     size: {east_west: 110, north_south: 110}    
   buildings:
     - {resolution: 5,
-        layout: {class: procedural, preset: simple}, 
+        layout: {class: grid, preset: simple}, 
         size: {x: 10, y: 10, height: {mean: 20, std: 5}},
         rotation: {mean: 45, std: 0}
         }
@@ -55,7 +26,7 @@ simple_test_1:
     - {id: 4, position: [10, 55, 0], radius: 4, height: 14}
     - {id: 5, position: [100, 55, 0], radius: 3, height: 11}
    
-simple_test_2:
+simple_test_1:
   materials:
     ground: {tag: Street, shading: 0}
     wall: {tag: CMU, shading: 1}
@@ -63,20 +34,30 @@ simple_test_2:
     trunk: {tag: Wood, shading: 0}
     foliage: {tag: Wood, shading: 1}        
   ground:
-    resolution: 5   
-    size: {east_west: 110, north_south: 110}    
+    resolution: 15   
+    size: {east_west: 300, north_south: 300}
   buildings:
     - {resolution: 5,
        layout: {class: grid, preset: simple}, 
-       size: {x: 10, y: 10, height: {mean: 20, std: 5}},
-       rotation: {mean: 45, std: 0}
+       translation: {x: 100, y: 100},
+       size: {x: 10, y: 10, height: {mean: 20, std: 5}}
+       }
+    - {resolution: 5,
+       layout: {class: circle, preset: c_3}, 
+       size: {x: 15, y: 15, height: 25},
+       rotation: 0
+       }
+    - {resolution: 5,
+       layout: {class: grid, preset: l_4}, 
+       size: {x: 150, y: 15, height: 30},
+       rotation: 0
        }
   trees:
-    - {id: 1, position: [55, 55, 0], radius: 3, height: 13}
-    - {id: 2, position: [55, 10, 0], radius: 6, height: 13}
-    - {id: 3, position: [55, 100, 0], radius: 3, height: 13}
-    - {id: 4, position: [10, 55, 0], radius: 4, height: 14}
-    - {id: 5, position: [100, 55, 0], radius: 3, height: 11}
+    - {id: 1, position: [155, 155, 0], radius: 3, height: 13}
+    - {id: 2, position: [155, 110, 0], radius: 6, height: 13}
+    - {id: 3, position: [155, 200, 0], radius: 3, height: 13}
+    - {id: 4, position: [110, 155, 0], radius: 4, height: 14}
+    - {id: 5, position: [200, 155, 0], radius: 3, height: 11}
     
 
 madrid:
