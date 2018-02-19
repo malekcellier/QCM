@@ -1,4 +1,8 @@
 SimpleTest:
+  universe: simple_test_1
+  povs: simple_test_1
+
+SimpleTest_old:
   freqs:
     central_ghz: 28
     spacing_khz: 150
