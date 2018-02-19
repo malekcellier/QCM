@@ -1,7 +1,7 @@
 % Author: Malek Cellier
 % Work address: Kista, Sweden
 % Email: malek.cellier@huawei.com
-% 2018-01-25
+% Created: 2018-01-25
 
 classdef QCMUniverse < handle
     %QCMUNIVERSE Builds input universe to QCM model
@@ -21,19 +21,42 @@ classdef QCMUniverse < handle
 
 
     methods
-        function obj = QCMUniverse(preset_name)
+        function obj = QCMUniverse(preset_name, preset)
             if nargin == 0
-                preset_name = 'simple_test';
-            end            
+                % Nothing is specified, so fall back to the local yaml file
+                preset_name = 'simple_test'; % Should be default instead
+                preset = '';
+            elseif nargin == 1
+                % The name of the preset of the local yaml file is passed
+                preset = '';
+            %elseif nargin == 2
+                % There are 2 inputs which means that the name of the preset
+                % As well as the preset in json foam has been passed by the calling funciton
+
+            end
+
             obj.preset_name = preset_name;
-            obj.readParameters(preset_name)
+            obj.readParameters(preset_name, preset)
             obj.readPresets() % Buildings presets so far
             obj.create()
         end
 
-        function readParameters(obj, preset_name)            
-            params = ReadYaml('presets/universes.yaml');
-            obj.prm = params.(preset_name); % This is the universe preset            
+        function readParameters(obj, preset_name, preset)            
+            if strcmp(preset, '')
+                % The preset is empty => the local file is used
+                params = ReadYaml('presets/universes.yaml');
+                obj.prm = params.(preset_name); % This is the universe preset            
+            else
+                % The actual preset is passed
+                disp('Raw preset:')
+                preset
+                obj.prm = jsondecode(preset);
+                obj.prm.materials
+                obj.prm.trees
+                obj.prm.ground
+                obj.prm.buildings
+
+            end
         end
         
         function readPresets(obj)            
@@ -116,6 +139,16 @@ classdef QCMUniverse < handle
             nTrees = size(obj.prm.trees, 2);
             obj.trees = cell(1, nTrees);
             for ii=1:nTrees
+                %disp('obj.prm.trees: ')
+                %obj.prm.trees
+                %obj.prm.trees(1)
+                %obj.prm.trees(2)
+                %disp('obj.prm.trees.position: ')
+                %obj.prm.trees.position
+                %disp('type obj.prm.trees: ')
+                %type(obj.prm.trees)
+                %disp('obj.prm.trees{ii}: ')
+                %obj.prm.trees{ii}
                 pos = cell2mat(obj.prm.trees{ii}.position);
                 radius = obj.prm.trees{ii}.radius;
                 height = obj.prm.trees{ii}.height;
