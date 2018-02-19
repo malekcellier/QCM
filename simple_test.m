@@ -1,0 +1,1 @@
+q = QCMUniverse('simple_test')
