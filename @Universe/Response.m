@@ -7,7 +7,7 @@
 %
 % -------------------------------------------------------------------------
 %     This is a part of the Qamcom Channel Model (QCM)
-%     Copyright (C) 2017  Björn Sihlbom, QAMCOM Research & Technology AB
+%     Copyright (C) 2017  BjÃ¶rn Sihlbom, QAMCOM Research & Technology AB
 %     mailto:bjorn.sihlbom@qamcom.se, http://www.qamcom.se, https://github.com/qamcom/QCM 
 % 
 %     This program is free software: you can redistribute it and/or modify
@@ -39,11 +39,15 @@ x = u.Channels(povs0,povs1,freqs,0,rain);
 
 clf;
 Hf=[]; tags={}; 
-for ii=1:x.N
-    tmp = u.Channel(povs0{1},povs1{ii},freqs,0,rain);
-    [ne0,ne1,nf]=size(tmp.Hf);
-    Hf(1:ne0,1:ne1,1:nf,ii)=tmp.Hf;
-    tags{end+1} = tmp.tag;
+ii=0;
+for iN0=1:x.N0
+    for iN1=1:x.N1
+        ii=ii+1;
+        tmp = u.Channel(povs0{iN0},povs1{iN1},freqs,0,rain);
+        [ne0,ne1,nf]=size(tmp.Hf);
+        Hf(1:ne0,1:ne1,1:nf,ii)=tmp.Hf;
+        tags{end+1} = tmp.tag;
+    end
 end
 Hf = permute(Hf,[3,1,2,4]);
 Nf = size(Hf,1);
